@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "18108138015",
+    "project_id": "qofona-86fb7",
+    "storage_bucket": "qofona-86fb7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:18108138015:android:f1cc9103aeb09dcccc8b2a",
+        "android_client_info": {
+          "package_name": "com.qofona.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "18108138015-nk219fme9um0hdc5qkqbvctb25e5msqh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.qofona.app",
+            "certificate_hash": "4cd56deeeb4613231f689af5e46f5e76e2ec2da2"
+          }
+        },
+        {
+          "client_id": "18108138015-9l392974otpt3mmkrvvf4b76gqff0k4s.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5ISlxmiflFnfEiUzpKeWrETr1eL51W94"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "18108138015-9l392974otpt3mmkrvvf4b76gqff0k4s.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "18108138015-lugtlvgm44i27k2dicaka6ocs2njrcgh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.qofona.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

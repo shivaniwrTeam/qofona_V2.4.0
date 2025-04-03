@@ -19,7 +19,7 @@ class SubCategoryFilterScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? args = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => SubCategoryFilterScreen(
         selection: args!["selection"],
         model: args["model"],
@@ -114,8 +114,8 @@ class _SubCategoryFilterScreenState extends State<SubCategoryFilterScreen>
                                 height: 32,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
-                                    color:
-                                        context.color.textLightColor.withValues(alpha: 0.1)),
+                                    color: context.color.textLightColor
+                                        .withValues(alpha: 0.1)),
                                 child: Icon(
                                   Icons.chevron_right_outlined,
                                   color: context.color.textDefaultColor,

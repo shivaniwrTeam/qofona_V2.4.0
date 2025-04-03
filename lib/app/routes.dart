@@ -117,14 +117,12 @@ class Routes {
   static const sellerVerificationComplteScreen =
       '/sellerVerificationComplteScreen';
 
-
   static const selectItemTypeScreen = '/selectItemType';
   static const addItemDetailsScreen = '/addItemDetailsScreen';
   static const setItemParametersScreen = '/setItemParametersScreen';
   static const selectOutdoorFacility = '/selectOutdoorFacility';
   static const adDetailsScreen = '/adDetailsScreen';
   static const successItemScreen = '/successItemScreen';
-
 
   static const selectCategoryScreen = '/selectCategoryScreen';
   static const selectNestedCategoryScreen = '/selectNestedCategoryScreen';
@@ -134,7 +132,6 @@ class Routes {
   static const sectionWiseItemsScreen = '/sectionWiseItemsScreen';
   static const blockedUserListScreen = '/blockedUserListScreen';
   static const payStackWebViewScreen = '/payStackWebViewScreen';
-
 
   static const playground = 'playground';
 
@@ -151,12 +148,11 @@ class Routes {
     if (routeSettings.name!.contains('/product-details/')) {
       final itemSlug = routeSettings.name!.split('/').last;
       if (previousRoute.isEmpty) {
-        return BlurredRouter(
+        return MaterialPageRoute(
             builder: ((context) => SplashScreen(
                   itemSlug: itemSlug,
                 )));
       } else {
-
         if (currentRoute == adDetailsScreen) {
           Constant.navigatorKey.currentState?.pop();
         }
@@ -165,10 +161,9 @@ class Routes {
       }
     }
 
-
     switch (routeSettings.name) {
       case splash:
-        return BlurredRouter(builder: ((context) => const SplashScreen()));
+        return MaterialPageRoute(builder: ((context) => const SplashScreen()));
       case onboarding:
         return CupertinoPageRoute(
             builder: ((context) => const OnboardingScreen()));

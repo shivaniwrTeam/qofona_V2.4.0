@@ -57,7 +57,7 @@ class ChatTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.push(context, BlurredRouter(
+        Navigator.push(context, MaterialPageRoute(
           builder: (context) {
             currentlyChatingWith = id;
             currentlyChatItemId = itemId;

@@ -22,7 +22,7 @@ class ChatListScreen extends StatefulWidget {
   const ChatListScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const ChatListScreen();
       },

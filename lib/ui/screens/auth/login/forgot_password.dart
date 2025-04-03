@@ -14,8 +14,8 @@ import 'package:flutter/material.dart';
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
 
-  static BlurredRouter route(RouteSettings routeSettings) {
-    return BlurredRouter(
+  static Route route(RouteSettings routeSettings) {
+    return MaterialPageRoute(
       builder: (_) => const ForgotPasswordScreen(),
     );
   }
@@ -43,7 +43,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top:25.0),
+                  padding: const EdgeInsets.only(top: 25.0),
                   child: Align(
                     alignment: AlignmentDirectional.bottomEnd,
                     child: FittedBox(

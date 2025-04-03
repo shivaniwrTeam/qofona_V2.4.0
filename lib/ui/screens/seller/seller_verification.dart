@@ -30,7 +30,7 @@ class SellerVerificationScreen extends StatefulWidget {
 
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return SellerVerificationScreen(
           isResubmitted: arguments?["isResubmitted"],
@@ -131,12 +131,8 @@ class _SellerVerificationScreenState
     );
   }
 
-
-
   Map<String, dynamic> convertToCustomFields(Map<dynamic, dynamic> fieldsData) {
     return fieldsData.map((key, value) {
-
-
       return MapEntry('verification_field[$key]', value.join(', '));
     })
       ..removeWhere((key, value) => value == null); // Remove null entries

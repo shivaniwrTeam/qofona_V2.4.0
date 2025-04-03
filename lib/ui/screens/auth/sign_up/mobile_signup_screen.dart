@@ -33,9 +33,9 @@ class MobileSignUpScreen extends StatefulWidget {
   @override
   State<MobileSignUpScreen> createState() => MobileSignUpScreenState();
 
-  static BlurredRouter route(RouteSettings routeSettings) {
+  static Route route(RouteSettings routeSettings) {
     Map? args = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => MobileSignUpScreen(
               mobile: args?['mobile'],
               countryCode: args?['countryCode'],
@@ -164,7 +164,7 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
         statusBarColor: context.color.backgroundColor,
       ),
       child: SafeArea(
-        top:false,
+        top: false,
         child: GestureDetector(
           onTap: () => FocusScope.of(context).unfocus(),
           child: PopScope(
@@ -249,14 +249,13 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top:25.0),
+                padding: const EdgeInsets.only(top: 25.0),
                 child: Align(
                   alignment: AlignmentDirectional.topEnd,
                   child: FittedBox(
                     fit: BoxFit.none,
                     child: MaterialButton(
                       onPressed: () {
-
                         HelperUtils.killPreviousPages(context, Routes.main,
                             {"from": "login", "isSkipped": true});
                       },
@@ -300,7 +299,8 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
                     color: context.color.secondaryColor,
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                        color: context.color.textLightColor.withValues(alpha: 0.18))),
+                        color: context.color.textLightColor
+                            .withValues(alpha: 0.18))),
                 child: Row(
                   children: [
                     // Display the country code as text
@@ -343,7 +343,8 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       CustomText("alreadyHaveAcc".translate(context),
-                          color: context.color.textColorDark.withValues(alpha: 0.7)),
+                          color: context.color.textColorDark
+                              .withValues(alpha: 0.7)),
                       const SizedBox(
                         width: 12,
                       ),
@@ -459,7 +460,6 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
                       'title': "termsConditions".translate(context),
                       'param': Api.termsAndConditions
                     })),
-
             const SizedBox(
               width: 5.0,
             ),
@@ -489,7 +489,6 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
     );
   }
 
-
   Widget otpInput() {
     return Center(
         child: PinFieldAutoFill(
@@ -515,7 +514,7 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:25.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: Align(
               alignment: AlignmentDirectional.bottomEnd,
               child: FittedBox(
@@ -594,7 +593,6 @@ class MobileSignUpScreenState extends State<MobileSignUpScreen> {
           UiUtils.buildButton(
             context,
             onPressed: () {
-
               if (otp!.trim().length < 6) {
                 HelperUtils.showSnackBarMessage(
                     context, "pleaseEnterSixDigits".translate(context));

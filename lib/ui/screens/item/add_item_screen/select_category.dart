@@ -27,7 +27,7 @@ class SelectCategoryScreen extends StatefulWidget {
   const SelectCategoryScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const SelectCategoryScreen();
       },
@@ -68,112 +68,110 @@ class _SelectCategoryScreenState extends CloudState<SelectCategoryScreen> {
     return AnnotatedRegion(
       value: UiUtils.getSystemUiOverlayStyle(
           context: context, statusBarColor: context.color.secondaryColor),
-      child: SafeArea(
-        child: Scaffold(
-          appBar: UiUtils.buildAppBar(context,
-              showBackButton: true,
-              title: "adListing".translate(context), onBackPress: () {
-            Navigator.of(context).popUntil((route) => route.isFirst);
-          }),
-          body: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            controller: controller,
-            child: Padding(
-              padding: const EdgeInsets.all(18),
-              child: BlocBuilder<FetchCategoryCubit, FetchCategoryState>(
-                  builder: (context, state) {
-                if (state is FetchCategoryFailure) {
-                  return CustomText(state.errorMessage);
-                }
-                if (state is FetchCategoryInProgress) {
-                  return Center(child: UiUtils.progress());
-                }
+      child: Scaffold(
+        appBar: UiUtils.buildAppBar(context,
+            showBackButton: true,
+            title: "adListing".translate(context), onBackPress: () {
+          Navigator.of(context).popUntil((route) => route.isFirst);
+        }),
+        body: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          controller: controller,
+          child: Padding(
+            padding: const EdgeInsets.all(18),
+            child: BlocBuilder<FetchCategoryCubit, FetchCategoryState>(
+                builder: (context, state) {
+              if (state is FetchCategoryFailure) {
+                return CustomText(state.errorMessage);
+              }
+              if (state is FetchCategoryInProgress) {
+                return Center(child: UiUtils.progress());
+              }
 
-                if (state is FetchCategorySuccess) {
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        "selectTheCategory".translate(context),
-                        fontSize: context.font.large,
-                        fontWeight: FontWeight.w600,
-                        color: context.color.textColorDark,
+              if (state is FetchCategorySuccess) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      "selectTheCategory".translate(context),
+                      fontSize: context.font.large,
+                      fontWeight: FontWeight.w600,
+                      color: context.color.textColorDark,
+                    ),
+                    const SizedBox(
+                      height: 18,
+                    ),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate:
+                          SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
+                        crossAxisCount: 3,
+                        height:
+                            MediaQuery.of(context).size.height * 0.18, //149,
+                        crossAxisSpacing: 14,
+                        mainAxisSpacing: 14,
                       ),
-                      const SizedBox(
-                        height: 18,
-                      ),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCountAndFixedHeight(
-                          crossAxisCount: 3,
-                          height:
-                              MediaQuery.of(context).size.height * 0.18, //149,
-                          crossAxisSpacing: 14,
-                          mainAxisSpacing: 14,
-                        ),
-                        itemBuilder: (context, index) {
-                          CategoryModel category = state.categories[index];
+                      itemBuilder: (context, index) {
+                        CategoryModel category = state.categories[index];
 
-                          return CategoryCard(
-                            onTap: () {
-                              if (category.children!.isEmpty &&
-                                  category.subcategoriesCount == 0) {
-                                if (TouchManager.canProcessTouch()) {
-                                  addCloudData("breadCrumb", [category]);
-                                  List<CategoryModel>? breadCrumbList =
-                                      getCloudData("breadCrumb")
-                                          as List<CategoryModel>?;
+                        return CategoryCard(
+                          onTap: () {
+                            if (category.children!.isEmpty &&
+                                category.subcategoriesCount == 0) {
+                              if (TouchManager.canProcessTouch()) {
+                                addCloudData("breadCrumb", [category]);
+                                List<CategoryModel>? breadCrumbList =
+                                    getCloudData("breadCrumb")
+                                        as List<CategoryModel>?;
 
-                                  screenStack++;
-                                  Navigator.pushNamed(
-                                    context,
-                                    Routes.addItemDetails,
-                                    arguments: <String, dynamic>{
-                                      "breadCrumbItems": breadCrumbList
-                                    },
-                                  ).then((value) {
-                                    List<CategoryModel> bcd =
-                                        getCloudData("breadCrumb");
-                                    addCloudData("breadCrumb", bcd);
-                                    //}
-                                  });
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    // Notify that touch processing is complete
-                                    TouchManager.touchProcessed();
-                                  });
-                                }
-                              } else {
-                                if (TouchManager.canProcessTouch()) {
-                                  addCloudData("breadCrumb", [category]);
-
-                                  screenStack++;
-                                  Navigator.pushNamed(context,
-                                      Routes.selectNestedCategoryScreen,
-                                      arguments: {
-                                        "current": category,
-                                      });
-                                  Future.delayed(Duration(seconds: 1), () {
-                                    // Notify that touch processing is complete
-                                    TouchManager.touchProcessed();
-                                  });
-                                }
+                                screenStack++;
+                                Navigator.pushNamed(
+                                  context,
+                                  Routes.addItemDetails,
+                                  arguments: <String, dynamic>{
+                                    "breadCrumbItems": breadCrumbList
+                                  },
+                                ).then((value) {
+                                  List<CategoryModel> bcd =
+                                      getCloudData("breadCrumb");
+                                  addCloudData("breadCrumb", bcd);
+                                  //}
+                                });
+                                Future.delayed(Duration(seconds: 1), () {
+                                  // Notify that touch processing is complete
+                                  TouchManager.touchProcessed();
+                                });
                               }
-                            },
-                            title: category.name!,
-                            url: category.url!,
-                          );
-                        },
-                        itemCount: state.categories.length,
-                      ),
-                      if (state.isLoadingMore) UiUtils.progress()
-                    ],
-                  );
-                }
-                return Container();
-              }),
-            ),
+                            } else {
+                              if (TouchManager.canProcessTouch()) {
+                                addCloudData("breadCrumb", [category]);
+
+                                screenStack++;
+                                Navigator.pushNamed(
+                                    context, Routes.selectNestedCategoryScreen,
+                                    arguments: {
+                                      "current": category,
+                                    });
+                                Future.delayed(Duration(seconds: 1), () {
+                                  // Notify that touch processing is complete
+                                  TouchManager.touchProcessed();
+                                });
+                              }
+                            }
+                          },
+                          title: category.name!,
+                          url: category.url!,
+                        );
+                      },
+                      itemCount: state.categories.length,
+                    ),
+                    if (state.isLoadingMore) UiUtils.progress()
+                  ],
+                );
+              }
+              return Container();
+            }),
           ),
         ),
       ),
@@ -191,7 +189,7 @@ class SelectNestedCategory extends StatefulWidget {
 
   static Route route(RouteSettings settings) {
     Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return SelectNestedCategory(
           current: arguments['current'],
@@ -654,7 +652,6 @@ class _SelectNestedCategoryState extends CloudState<SelectNestedCategory> {
       child: ListView.separated(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
-
         itemCount: 15,
         separatorBuilder: (context, index) {
           return Container();

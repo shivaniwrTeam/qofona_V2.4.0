@@ -44,13 +44,12 @@ class StatesScreen extends StatefulWidget {
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
 
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) => FetchStatesCubit(),
           ),
-
         ],
         child: StatesScreen(
           countryId: arguments?['countryId'],
@@ -201,7 +200,6 @@ class StatesScreenState extends State<StatesScreen> {
                   ))),
         ),
       ),
-
       elevation: context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
           ? 0
           : 6,
@@ -217,7 +215,6 @@ class StatesScreenState extends State<StatesScreen> {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-
       itemCount: 15,
       separatorBuilder: (context, index) {
         return Container();

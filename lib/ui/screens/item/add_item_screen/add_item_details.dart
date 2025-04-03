@@ -38,7 +38,7 @@ class AddItemDetails extends StatefulWidget {
   static Route route(RouteSettings settings) {
     Map<String, dynamic>? arguments =
         settings.arguments as Map<String, dynamic>?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) => FetchCustomFieldsCubit(),
@@ -179,37 +179,54 @@ class _AddItemDetailsState extends CloudState<AddItemDetails> {
         onPopInvokedWithResult: (didPop, result) {
           return;
         },
-        child: SafeArea(
-          child: Scaffold(
-            appBar: UiUtils.buildAppBar(context,
-                showBackButton: true, title: "AdDetails".translate(context)),
-            bottomNavigationBar: Container(
-              color: Colors.transparent,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-                child: UiUtils.buildButton(context, onPressed: () {
-                  ///File to
+        child: Scaffold(
+          appBar: UiUtils.buildAppBar(context,
+              showBackButton: true, title: "AdDetails".translate(context)),
+          bottomNavigationBar: Container(
+            color: Colors.transparent,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: UiUtils.buildButton(context, onPressed: () {
+                ///File to
 
-                  if (_formKey.currentState?.validate() ?? false) {
-                    List<File>? galleryImages = mixedItemImageList
-                        .where((element) => element != null && element is File)
-                        .map((element) => element as File)
-                        .toList();
+                if (_formKey.currentState?.validate() ?? false) {
+                  List<File>? galleryImages = mixedItemImageList
+                      .where((element) => element != null && element is File)
+                      .map((element) => element as File)
+                      .toList();
 
-                    if (_pickTitleImage.pickedFile == null &&
-                        titleImageURL == "") {
-                      UiUtils.showBlurredDialoge(
-                        context,
-                        dialoge: BlurredDialogBox(
-                          title: "imageRequired".translate(context),
-                          content: CustomText(
-                            "selectImageYourItem".translate(context),
-                          ),
+                  if (_pickTitleImage.pickedFile == null &&
+                      titleImageURL == "") {
+                    UiUtils.showBlurredDialoge(
+                      context,
+                      dialoge: BlurredDialogBox(
+                        title: "imageRequired".translate(context),
+                        content: CustomText(
+                          "selectImageYourItem".translate(context),
                         ),
-                      );
-                      return;
-                    }
-                    addCloudData("item_details", {
+                      ),
+                    );
+                    return;
+                  }
+                  addCloudData("item_details", {
+                    "name": adTitleController.text,
+                    "slug": adSlugController.text,
+                    "description": adDescriptionController.text,
+                    if (widget.isEdit != true)
+                      "category_id": selectedCategoryList.last,
+                    if (widget.isEdit == true) "id": item?.id,
+                    "price": adPriceController.text,
+                    "contact": adPhoneNumberController.text,
+                    "video_link": adAdditionalDetailsController.text,
+                    if (widget.isEdit == true)
+                      "delete_item_image_id": deleteItemImageList.join(','),
+                    "all_category_ids": widget.isEdit == true
+                        ? item!.allCategoryIds
+                        : selectedCategoryList.join(',')
+                  });
+                  screenStack++;
+                  if (context.read<FetchCustomFieldsCubit>().isEmpty()!) {
+                    addCloudData("with_more_details", {
                       "name": adTitleController.text,
                       "slug": adSlugController.text,
                       "description": adDescriptionController.text,
@@ -219,301 +236,280 @@ class _AddItemDetailsState extends CloudState<AddItemDetails> {
                       "price": adPriceController.text,
                       "contact": adPhoneNumberController.text,
                       "video_link": adAdditionalDetailsController.text,
-                      if (widget.isEdit == true)
-                        "delete_item_image_id": deleteItemImageList.join(','),
                       "all_category_ids": widget.isEdit == true
                           ? item!.allCategoryIds
-                          : selectedCategoryList.join(',')
+                          : selectedCategoryList.join(','),
+                      if (widget.isEdit == true)
+                        "delete_item_image_id": deleteItemImageList.join(',')
                     });
-                    screenStack++;
-                    if (context.read<FetchCustomFieldsCubit>().isEmpty()!) {
-                      addCloudData("with_more_details", {
-                        "name": adTitleController.text,
-                        "slug": adSlugController.text,
-                        "description": adDescriptionController.text,
-                        if (widget.isEdit != true)
-                          "category_id": selectedCategoryList.last,
-                        if (widget.isEdit == true) "id": item?.id,
-                        "price": adPriceController.text,
-                        "contact": adPhoneNumberController.text,
-                        "video_link": adAdditionalDetailsController.text,
-                        "all_category_ids": widget.isEdit == true
-                            ? item!.allCategoryIds
-                            : selectedCategoryList.join(','),
-                        if (widget.isEdit == true)
-                          "delete_item_image_id": deleteItemImageList.join(',')
-                      });
 
-                      Navigator.pushNamed(context, Routes.confirmLocationScreen,
-                          arguments: {
-                            "isEdit": widget.isEdit,
-                            "mainImage": _pickTitleImage.pickedFile,
-                            "otherImage": galleryImages
-                          });
-                    } else {
-                      Navigator.pushNamed(context, Routes.addMoreDetailsScreen,
-                          arguments: {
-                            "context": context,
-                            "isEdit": widget.isEdit == true,
-                            "mainImage": _pickTitleImage.pickedFile,
-                            "otherImage": galleryImages
-                          }).then((value) {
-                        screenStack--;
-                      });
-                    }
+                    Navigator.pushNamed(context, Routes.confirmLocationScreen,
+                        arguments: {
+                          "isEdit": widget.isEdit,
+                          "mainImage": _pickTitleImage.pickedFile,
+                          "otherImage": galleryImages
+                        });
+                  } else {
+                    Navigator.pushNamed(context, Routes.addMoreDetailsScreen,
+                        arguments: {
+                          "context": context,
+                          "isEdit": widget.isEdit == true,
+                          "mainImage": _pickTitleImage.pickedFile,
+                          "otherImage": galleryImages
+                        }).then((value) {
+                      screenStack--;
+                    });
                   }
-                },
-                    height: 48,
-                    fontSize: context.font.large,
-                    buttonTitle: "next".translate(context)),
-              ),
+                }
+              },
+                  height: 48,
+                  fontSize: context.font.large,
+                  buttonTitle: "next".translate(context)),
             ),
-            body: Form(
-              key: _formKey,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.all(18.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      CustomText(
-                        "youAreAlmostThere".translate(context),
-                        fontSize: context.font.large,
-                        fontWeight: FontWeight.w600,
-                        color: context.color.textColorDark,
-                      ),
+          ),
+          body: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(18.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomText(
+                      "youAreAlmostThere".translate(context),
+                      fontSize: context.font.large,
+                      fontWeight: FontWeight.w600,
+                      color: context.color.textColorDark,
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    if (widget.breadCrumbItems != null)
                       SizedBox(
-                        height: 16,
-                      ),
-                      if (widget.breadCrumbItems != null)
-                        SizedBox(
-                          height: 20,
-                          width: context.screenWidth,
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: ListView.builder(
-                                shrinkWrap: true,
-                                scrollDirection: Axis.horizontal,
-                                physics: const NeverScrollableScrollPhysics(),
-                                itemBuilder: (context, index) {
-                                  bool isNotLast =
-                                      (widget.breadCrumbItems!.length - 1) !=
-                                          index;
+                        height: 20,
+                        width: context.screenWidth,
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: ListView.builder(
+                              shrinkWrap: true,
+                              scrollDirection: Axis.horizontal,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                bool isNotLast =
+                                    (widget.breadCrumbItems!.length - 1) !=
+                                        index;
 
-                                  return Row(
-                                    children: [
-                                      InkWell(
-                                          onTap: () {
-                                            _onBreadCrumbItemTap(index);
-                                          },
-                                          child: CustomText(
-                                            widget
-                                                .breadCrumbItems![index].name!,
-                                            color: isNotLast
-                                                ? context.color.textColorDark
-                                                : context.color.territoryColor,
-                                            firstUpperCaseWidget: true,
-                                          )),
-                                      if (index <
-                                          widget.breadCrumbItems!.length - 1)
-                                        CustomText(" > ",
-                                            color:
-                                                context.color.territoryColor),
-                                    ],
-                                  );
-                                },
-                                itemCount: widget.breadCrumbItems!.length),
-                          ),
+                                return Row(
+                                  children: [
+                                    InkWell(
+                                        onTap: () {
+                                          _onBreadCrumbItemTap(index);
+                                        },
+                                        child: CustomText(
+                                          widget.breadCrumbItems![index].name!,
+                                          color: isNotLast
+                                              ? context.color.textColorDark
+                                              : context.color.territoryColor,
+                                          firstUpperCaseWidget: true,
+                                        )),
+                                    if (index <
+                                        widget.breadCrumbItems!.length - 1)
+                                      CustomText(" > ",
+                                          color: context.color.territoryColor),
+                                  ],
+                                );
+                              },
+                              itemCount: widget.breadCrumbItems!.length),
                         ),
-                      SizedBox(
-                        height: 18,
                       ),
-                      CustomText("adTitle".translate(context)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: adTitleController,
-                        // controller: _itemNameController,
-                        validator: CustomTextFieldValidator.nullCheck,
-                        action: TextInputAction.next,
-                        capitalization: TextCapitalization.sentences,
-                        hintText: "adTitleHere".translate(context),
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      CustomText(
-                          "${"adSlug".translate(context)}\t(${"englishOnlyLbl".translate(context)})"),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: adSlugController,
-                        onChange: (value) {
-                          String slug = generateSlug(value);
-                          adSlugController.value = TextEditingValue(
-                            text: slug,
-                            selection: TextSelection.fromPosition(
-                              TextPosition(offset: slug.length),
-                            ),
-                          );
-                        },
-                        // controller: _itemNameController,
-                        validator: CustomTextFieldValidator.slug,
-                        action: TextInputAction.next,
-                        hintText: "adSlugHere".translate(context),
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      CustomText("descriptionLbl".translate(context)),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      CustomTextFormField(
-                        controller: adDescriptionController,
-
-                        action: TextInputAction.newline,
-                        // controller: _descriptionController,
-                        validator: CustomTextFieldValidator.nullCheck,
-                        capitalization: TextCapitalization.sentences,
-                        hintText: "writeSomething".translate(context),
-                        maxLine: 100,
-                        minLine: 6,
-
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                      Row(
-                        children: [
-                          CustomText("mainPicture".translate(context)),
-                          const SizedBox(
-                            width: 3,
+                    SizedBox(
+                      height: 18,
+                    ),
+                    CustomText("adTitle".translate(context)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      controller: adTitleController,
+                      // controller: _itemNameController,
+                      validator: CustomTextFieldValidator.nullCheck,
+                      action: TextInputAction.next,
+                      capitalization: TextCapitalization.sentences,
+                      hintText: "adTitleHere".translate(context),
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CustomText(
+                        "${"adSlug".translate(context)}\t(${"englishOnlyLbl".translate(context)})"),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      controller: adSlugController,
+                      onChange: (value) {
+                        String slug = generateSlug(value);
+                        adSlugController.value = TextEditingValue(
+                          text: slug,
+                          selection: TextSelection.fromPosition(
+                            TextPosition(offset: slug.length),
                           ),
-                          CustomText(
-                            "maxSize".translate(context),
-                            fontStyle: FontStyle.italic,
-                            fontSize: context.font.small,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Wrap(
-                        children: [
-                          if (_pickTitleImage.pickedFile != null)
-                            ...[]
-                          else
-                            ...[],
-                          titleImageListener(),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      Row(
-                        children: [
-                          CustomText("otherPictures".translate(context)),
-                          const SizedBox(
-                            width: 3,
-                          ),
-                          CustomText(
-                            "max5Images".translate(context),
-                            fontStyle: FontStyle.italic,
-                            fontSize: context.font.small,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      itemImagesListener(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText("price".translate(context)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: adPriceController,
-                        action: TextInputAction.next,
-                        prefix: CustomText("${Constant.currencySymbol} "),
-                        // controller: _priceController,
-                        formaters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d*')),
-                        ],
-                        keyboard: TextInputType.number,
-                        validator: CustomTextFieldValidator.nullCheck,
-                        hintText: "00",
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText("phoneNumber".translate(context)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: adPhoneNumberController,
-                        action: TextInputAction.next,
-                        formaters: [
-                          FilteringTextInputFormatter.allow(
-                              RegExp(r'^\d+\.?\d*')),
-                        ],
-                        keyboard: TextInputType.phone,
-                        validator: CustomTextFieldValidator.phoneNumber,
-                        hintText: "9876543210",
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomText("videoLink".translate(context)),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      CustomTextFormField(
-                        controller: adAdditionalDetailsController,
-                        validator: CustomTextFieldValidator.url,
-                        // prefix: CustomText("${Constant.currencySymbol} "),
-                        // controller: _videoLinkController,
-                        // isReadOnly: widget.properyDetails != null,
-                        hintText: "http://example.com/video.mp4",
-                        hintTextStyle: TextStyle(
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.5),
-                            fontSize: context.font.large),
-                      ),
-                      SizedBox(
-                        height: 15,
-                      ),
-                    ],
-                  ),
+                        );
+                      },
+                      // controller: _itemNameController,
+                      validator: CustomTextFieldValidator.slug,
+                      action: TextInputAction.next,
+                      hintText: "adSlugHere".translate(context),
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CustomText("descriptionLbl".translate(context)),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    CustomTextFormField(
+                      controller: adDescriptionController,
+
+                      action: TextInputAction.newline,
+                      // controller: _descriptionController,
+                      validator: CustomTextFieldValidator.nullCheck,
+                      capitalization: TextCapitalization.sentences,
+                      hintText: "writeSomething".translate(context),
+                      maxLine: 100,
+                      minLine: 6,
+
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Row(
+                      children: [
+                        CustomText("mainPicture".translate(context)),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        CustomText(
+                          "maxSize".translate(context),
+                          fontStyle: FontStyle.italic,
+                          fontSize: context.font.small,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Wrap(
+                      children: [
+                        if (_pickTitleImage.pickedFile != null)
+                          ...[]
+                        else
+                          ...[],
+                        titleImageListener(),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        CustomText("otherPictures".translate(context)),
+                        const SizedBox(
+                          width: 3,
+                        ),
+                        CustomText(
+                          "max5Images".translate(context),
+                          fontStyle: FontStyle.italic,
+                          fontSize: context.font.small,
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    itemImagesListener(),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomText("price".translate(context)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      controller: adPriceController,
+                      action: TextInputAction.next,
+                      prefix: CustomText("${Constant.currencySymbol} "),
+                      // controller: _priceController,
+                      formaters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d*')),
+                      ],
+                      keyboard: TextInputType.number,
+                      validator: CustomTextFieldValidator.nullCheck,
+                      hintText: "00",
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomText("phoneNumber".translate(context)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      controller: adPhoneNumberController,
+                      action: TextInputAction.next,
+                      formaters: [
+                        FilteringTextInputFormatter.allow(
+                            RegExp(r'^\d+\.?\d*')),
+                      ],
+                      keyboard: TextInputType.phone,
+                      validator: CustomTextFieldValidator.phoneNumber,
+                      hintText: "9876543210",
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomText("videoLink".translate(context)),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    CustomTextFormField(
+                      controller: adAdditionalDetailsController,
+                      validator: CustomTextFieldValidator.url,
+                      // prefix: CustomText("${Constant.currencySymbol} "),
+                      // controller: _videoLinkController,
+                      // isReadOnly: widget.properyDetails != null,
+                      hintText: "http://example.com/video.mp4",
+                      hintTextStyle: TextStyle(
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.5),
+                          fontSize: context.font.large),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                  ],
                 ),
               ),
             ),

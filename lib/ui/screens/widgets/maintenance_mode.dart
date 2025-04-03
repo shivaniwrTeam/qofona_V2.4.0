@@ -9,7 +9,7 @@ import 'package:lottie/lottie.dart';
 class MaintenanceMode extends StatelessWidget {
   const MaintenanceMode({super.key});
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const MaintenanceMode();
       },

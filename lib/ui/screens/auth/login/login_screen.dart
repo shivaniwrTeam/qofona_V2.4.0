@@ -41,9 +41,9 @@ class LoginScreen extends StatefulWidget {
   @override
   State<LoginScreen> createState() => LoginScreenState();
 
-  static BlurredRouter route(RouteSettings routeSettings) {
+  static Route route(RouteSettings routeSettings) {
     Map? args = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => LoginScreen(
               isDeleteAccount: args?['isDeleteAccount'],
               popToCurrent: args?['popToCurrent'],
@@ -537,7 +537,7 @@ class LoginScreenState extends State<LoginScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top:25.0),
+              padding: const EdgeInsets.only(top: 25.0),
               child: Align(
                 alignment: AlignmentDirectional.bottomEnd,
                 child: FittedBox(
@@ -866,7 +866,7 @@ class LoginScreenState extends State<LoginScreen> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:25.0),
+            padding: const EdgeInsets.only(top: 25.0),
             child: Align(
               alignment: AlignmentDirectional.bottomEnd,
               child: FittedBox(

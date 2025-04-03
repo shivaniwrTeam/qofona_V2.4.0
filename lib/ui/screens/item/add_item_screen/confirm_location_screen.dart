@@ -42,10 +42,10 @@ class ConfirmLocationScreen extends StatefulWidget {
     required this.otherImage,
   }) : super(key: key);
 
-  static BlurredRouter route(RouteSettings settings) {
+  static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
 
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) => ManageItemCubit(),
@@ -758,7 +758,8 @@ class _ConfirmLocationScreenState extends CloudState<ConfirmLocationScreen>
                     }
                   },
                   decoration: InputDecoration(
-                      fillColor: context.color.textLightColor.withValues(alpha: 0.15),
+                      fillColor:
+                          context.color.textLightColor.withValues(alpha: 0.15),
                       filled: true,
                       contentPadding:
                           EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -771,11 +772,13 @@ class _ConfirmLocationScreenState extends CloudState<ConfirmLocationScreen>
                       enabledBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: context.color.textLightColor.withValues(alpha: 0.35))),
+                              color: context.color.textLightColor
+                                  .withValues(alpha: 0.35))),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(8),
                           borderSide: BorderSide(
-                              color: context.color.textLightColor.withValues(alpha: 0.35))),
+                              color: context.color.textLightColor
+                                  .withValues(alpha: 0.35))),
                       focusedBorder: OutlineInputBorder(
                           borderSide:
                               BorderSide(color: context.color.territoryColor))),

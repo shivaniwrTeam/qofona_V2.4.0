@@ -230,8 +230,6 @@ class UiUtils {
     }
   }
 
-
-
   static SystemUiOverlayStyle getSystemUiOverlayStyle(
       {required BuildContext context, required Color statusBarColor}) {
     return SystemUiOverlayStyle(
@@ -240,7 +238,6 @@ class UiUtils {
             context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
                 ? Brightness.light
                 : Brightness.dark,
-
         statusBarColor: statusBarColor,
         statusBarBrightness:
             context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
@@ -377,7 +374,6 @@ class UiUtils {
     );
   }
 
-
   static Widget buildButton(BuildContext context,
       {double? height,
       double? width,
@@ -502,10 +498,10 @@ class UiUtils {
   static void showFullScreenImage(BuildContext context,
       {required ImageProvider provider, VoidCallback? then}) {
     Navigator.of(context)
-        .push(BlurredRouter(
-            sigmaX: 10,
-            sigmaY: 10,
-            barrierDismiss: true,
+        .push(MaterialPageRoute(
+            // sigmaX: 10,
+            // sigmaY: 10,
+            barrierDismissible: true,
             builder: (BuildContext context) => FullScreenImageView(
                   provider: provider,
                 )))
@@ -549,21 +545,22 @@ class UiUtils {
       {required BlurDialog dialoge, double? sigmaX, double? sigmaY}) async {
     return await Navigator.push(
       context,
-      BlurredRouter(
-          barrierDismiss: true,
-          builder: (context) {
-            if (dialoge is BlurredDialogBox) {
-              return dialoge;
-            } else if (dialoge is BlurredDialogBuilderBox) {
-              return dialoge;
-            } else if (dialoge is EmptyDialogBox) {
-              return dialoge;
-            }
+      MaterialPageRoute(
+        barrierDismissible: true,
+        builder: (context) {
+          if (dialoge is BlurredDialogBox) {
+            return dialoge;
+          } else if (dialoge is BlurredDialogBuilderBox) {
+            return dialoge;
+          } else if (dialoge is EmptyDialogBox) {
+            return dialoge;
+          }
 
-            return Container();
-          },
-          sigmaX: sigmaX,
-          sigmaY: sigmaY),
+          return Container();
+        },
+        // sigmaX: sigmaX,
+        // sigmaY: sigmaY
+      ),
     );
   }
 
@@ -624,7 +621,6 @@ extension FormatAmount on String {
         ? "${Constant.currencySymbol}${toString()}"
         : "${toString()}${Constant.currencySymbol}";
   }
-
 
   String formatDate({
     String? format,

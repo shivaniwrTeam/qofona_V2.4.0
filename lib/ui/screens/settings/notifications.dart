@@ -27,7 +27,7 @@ class Notifications extends StatefulWidget {
   NotificationsState createState() => NotificationsState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => const Notifications(),
     );
   }
@@ -179,7 +179,8 @@ class NotificationsState extends State<Notifications> {
                       color: Theme.of(context).colorScheme.secondaryColor,
                       borderRadius: BorderRadius.circular(10),
                       border: Border.all(
-                          color: context.color.textLightColor.withValues(alpha: 0.28),
+                          color: context.color.textLightColor
+                              .withValues(alpha: 0.28),
                           width: 1),
                     ),
                     padding: const EdgeInsets.symmetric(

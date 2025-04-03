@@ -32,7 +32,7 @@ class SubCategoryScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? args = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => SubCategoryScreen(
         categoryList: args?['categoryList'],
         catName: args?['catName'],

@@ -73,7 +73,7 @@ class MainActivity extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => MainActivity(
               from: arguments['from'] as String,
               itemSlug: arguments['slug'] as String?,
@@ -105,7 +105,6 @@ class MainActivityState extends State<MainActivity>
   void initState() {
     super.initState();
 
-
     rootBundle.loadString(AppIcons.plusIcon).then((value) {
       svgEdit.loadSVG(value);
       svgEdit.change("Path_11299-2",
@@ -136,7 +135,6 @@ class MainActivityState extends State<MainActivity>
           arguments: {"slug": widget.itemSlug!});
     }
   }
-
 
   void addHistory(int index) {
     List<int> stack = navigationStack;

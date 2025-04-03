@@ -28,7 +28,7 @@ class SectionItemsScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => SectionItemsScreen(
           title: arguments['title'], sectionId: arguments['sectionId']),
     );

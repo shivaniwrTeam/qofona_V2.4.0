@@ -13,7 +13,7 @@ class NotificationDetail extends StatefulWidget {
   State<NotificationDetail> createState() => _NotificationDetailState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => const NotificationDetail(),
     );
   }

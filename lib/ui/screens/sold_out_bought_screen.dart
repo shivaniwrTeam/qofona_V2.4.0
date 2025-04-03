@@ -33,7 +33,7 @@ class SoldOutBoughtScreen extends StatefulWidget {
 
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) {

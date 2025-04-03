@@ -48,7 +48,7 @@ class AreasScreen extends StatefulWidget {
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
 
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) => BlocProvider(
           create: (context) => FetchAreasCubit(),
           child: AreasScreen(
@@ -201,7 +201,6 @@ class AreasScreenState extends State<AreasScreen> {
                   ),
                 ))),
       ),
-
       elevation: context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
           ? 0
           : 6,

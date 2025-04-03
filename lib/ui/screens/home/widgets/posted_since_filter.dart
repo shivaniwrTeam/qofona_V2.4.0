@@ -23,7 +23,7 @@ class PostedSinceFilterScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? args = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => PostedSinceFilterScreen(
         list: args?['list'],
         postedSince: args?['postedSince'],

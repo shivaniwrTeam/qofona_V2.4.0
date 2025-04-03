@@ -40,7 +40,7 @@ class SellerProfileScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => MultiBlocProvider(
               providers: [
                 BlocProvider(
@@ -589,7 +589,8 @@ class SellerProfileScreenState extends State<SellerProfileScreen>
                       rating: seller.averageRating!,
                       itemSize: 25.0,
                       activeColor: Colors.amber,
-                      inactiveColor: context.color.textLightColor.withValues(alpha: 0.1),
+                      inactiveColor:
+                          context.color.textLightColor.withValues(alpha: 0.1),
                       allowHalfRating: true,
                     ),
                     SizedBox(height: 3),
@@ -645,7 +646,8 @@ class SellerProfileScreenState extends State<SellerProfileScreen>
           child: LinearProgressIndicator(
             value: ratingCount / total,
             backgroundColor: Colors.grey.shade300,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange.withValues(alpha: 0.8)),
+            valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.deepOrange.withValues(alpha: 0.8)),
           ),
         ),
         SizedBox(width: 10),
@@ -822,7 +824,6 @@ class SellerProfileScreenState extends State<SellerProfileScreen>
       ),
     );
   }
-
 
   Widget buildItemsShimmer(BuildContext context) {
     return Padding(

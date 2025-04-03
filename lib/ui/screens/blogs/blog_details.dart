@@ -14,7 +14,7 @@ class BlogDetails extends StatelessWidget {
 
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlogDetails(
           blog: arguments['model'],

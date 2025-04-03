@@ -23,7 +23,7 @@ class LocationPermissionScreen extends StatefulWidget {
       LocationPermissionScreenState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(builder: (_) => const LocationPermissionScreen());
+    return MaterialPageRoute(builder: (_) => const LocationPermissionScreen());
   }
 }
 

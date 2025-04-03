@@ -14,7 +14,7 @@ class SellerVerificationCompleteScreen extends StatefulWidget {
   });
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return SellerVerificationCompleteScreen();
       },

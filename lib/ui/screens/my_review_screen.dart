@@ -30,7 +30,7 @@ class MyReviewScreen extends StatefulWidget {
   MyReviewScreenState createState() => MyReviewScreenState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(builder: (_) => MyReviewScreen());
+    return MaterialPageRoute(builder: (_) => MyReviewScreen());
   }
 }
 
@@ -65,14 +65,11 @@ class MyReviewScreenState extends State<MyReviewScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      child: Scaffold(
-        appBar: UiUtils.buildAppBar(context,
-            showBackButton: true, title: "myReview".translate(context)),
-        backgroundColor: context.color.backgroundColor,
-        body: ratingsListWidget(),
-      ),
+    return Scaffold(
+      appBar: UiUtils.buildAppBar(context,
+          showBackButton: true, title: "myReview".translate(context)),
+      backgroundColor: context.color.backgroundColor,
+      body: ratingsListWidget(),
     );
   }
 
@@ -240,7 +237,8 @@ class MyReviewScreenState extends State<MyReviewScreen>
                       rating: averageRating,
                       itemSize: 25.0,
                       activeColor: Colors.amber,
-                      inactiveColor: context.color.textLightColor.withValues(alpha: 0.1),
+                      inactiveColor:
+                          context.color.textLightColor.withValues(alpha: 0.1),
                       allowHalfRating: true,
                     ),
                     SizedBox(height: 3),
@@ -297,7 +295,8 @@ class MyReviewScreenState extends State<MyReviewScreen>
           child: LinearProgressIndicator(
             value: ratingCount / total,
             backgroundColor: Colors.grey.shade300,
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.deepOrange.withValues(alpha: 0.8)),
+            valueColor: AlwaysStoppedAnimation<Color>(
+                Colors.deepOrange.withValues(alpha: 0.8)),
           ),
         ),
         SizedBox(width: 10),
@@ -502,7 +501,7 @@ class MyReviewScreenState extends State<MyReviewScreen>
                               buttonTitle: "submitBtnLbl".translate(context),
                               radius: 8,
                               width: context.screenWidth / 4,
-                              textColor:secondaryColor_,
+                              textColor: secondaryColor_,
                               buttonColor: context.color.territoryColor,
                               height: 39),
                         ],

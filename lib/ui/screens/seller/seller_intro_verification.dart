@@ -19,7 +19,7 @@ class SellerIntroVerificationScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => SellerIntroVerificationScreen(
             isResubmitted: arguments?["isResubmitted"]));
   }

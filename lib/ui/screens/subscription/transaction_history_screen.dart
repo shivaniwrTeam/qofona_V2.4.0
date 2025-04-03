@@ -17,7 +17,7 @@ class TransactionHistory extends StatefulWidget {
   const TransactionHistory({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) {
@@ -35,8 +35,6 @@ class TransactionHistory extends StatefulWidget {
 
 class _TransactionHistoryState extends State<TransactionHistory> {
   late final ScrollController _pageScrollController = ScrollController();
-
-
 
   @override
   void initState() {

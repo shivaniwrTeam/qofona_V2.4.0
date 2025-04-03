@@ -22,7 +22,7 @@ class ContactUs extends StatefulWidget {
   ContactUsState createState() => ContactUsState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(builder: (_) => const ContactUs());
+    return MaterialPageRoute(builder: (_) => const ContactUs());
   }
 }
 
@@ -135,7 +135,7 @@ class ContactUsState extends State<ContactUs> {
   void showEmailDialog(email) {
     Navigator.push(
         context,
-        BlurredRouter(
+        MaterialPageRoute(
           builder: (context) => EmailSendWidget(email: email),
         ));
   }

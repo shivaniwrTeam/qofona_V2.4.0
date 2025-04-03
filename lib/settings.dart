@@ -23,7 +23,7 @@ class AppSettings {
   static const String androidPackageName = 'com.qofona.app';
   static const String shareAppText = "Share this App";
 
-  static const String hostUrl = "https://qofona.com";
+  static const String hostUrl = "https://admin.qofona.com";
 
   ///API Setting
 

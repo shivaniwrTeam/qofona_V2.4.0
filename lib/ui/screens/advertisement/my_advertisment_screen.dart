@@ -22,7 +22,7 @@ class MyAdvertisementScreen extends StatefulWidget {
   const MyAdvertisementScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider(
           create: (context) => FetchMyPromotedItemsCubit(),

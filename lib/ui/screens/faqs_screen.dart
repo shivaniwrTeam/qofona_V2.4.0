@@ -17,7 +17,7 @@ class FaqsScreen extends StatefulWidget {
   const FaqsScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const FaqsScreen();
       },

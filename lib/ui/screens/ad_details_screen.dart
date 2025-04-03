@@ -81,7 +81,7 @@ class AdDetailsScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
         builder: (_) => MultiBlocProvider(
               providers: [
                 BlocProvider(
@@ -144,7 +144,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
           double.parse(Constant.defaultLongitude)),
       zoom: 13);
 
-
   @override
   void initState() {
     super.initState();
@@ -205,7 +204,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
     }
   }
 
-
   @override
   void dispose() {
     super.dispose();
@@ -253,291 +251,287 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      top: false,
-      bottom: true,
-      child: AnnotatedRegion(
-          value: SystemUiOverlayStyle(
-            statusBarColor: context.color.secondaryDetailsColor,
-          ),
-          child: BlocConsumer<FetchItemFromSlugCubit, FetchItemFromSlugState>(
-              listener: (context, state) {
-            if (state is FetchItemFromSlugSuccess) {
-              log('success');
-              initVariables(state.item);
-            }
-          }, builder: (context, state) {
-            if (state is FetchItemFromSlugInitial && widget.slug != null) {
-              context
-                  .read<FetchItemFromSlugCubit>()
-                  .fetchItemFromSlug(slug: widget.slug!);
-              log('fetching item');
-              return Material(
-                child: Center(
-                  child: UiUtils.progress(),
-                ),
-              );
-            } else if (state is FetchItemFromSlugLoading) {
-              log('loading');
-              return Material(
-                child: Center(
-                  child: UiUtils.progress(),
-                ),
-              );
-            } else if (state is FetchItemFromSlugFailure) {
-              log('failure');
-              return SomethingWentWrong();
-            }
-            return BlocListener<MakeAnOfferItemCubit, MakeAnOfferItemState>(
-              listener: (context, state) {
-                if (state is MakeAnOfferItemInProgress) {
-                  Widgets.showLoader(context);
-                }
-                if (state is MakeAnOfferItemSuccess ||
-                    state is MakeAnOfferItemFailure) {
-                  Widgets.hideLoder(context);
-                }
-              },
-              child: Scaffold(
-                appBar: UiUtils.buildAppBar(
-                  context,
-                  backgroundColor: context.color.secondaryDetailsColor,
-                  showBackButton: true,
-                  actions: [
-                    if (isAddedByMe && model.status == "active" ||
-                        model.status == 'approved')
-                      Padding(
-                        padding: EdgeInsetsDirectional.only(
-                            end: isAddedByMe &&
-                                    (model.status != "sold out" &&
-                                        model.status != "review" &&
-                                        model.status != "resubmitted" &&
-                                        model.status != "inactive" &&
-                                        model.status != "permanent rejected" &&
-                                        model.status != "soft rejected")
-                                ? 30.0
-                                : 15),
-                        child: IconButton(
-                          onPressed: () {
-                            HelperUtils.share(context, model.slug!);
-                          },
-                          icon: Icon(
-                            Icons.share,
-                            size: 24,
-                            color: context.color.textDefaultColor,
-                          ),
+    return AnnotatedRegion(
+        value: SystemUiOverlayStyle(
+          statusBarColor: context.color.secondaryDetailsColor,
+        ),
+        child: BlocConsumer<FetchItemFromSlugCubit, FetchItemFromSlugState>(
+            listener: (context, state) {
+          if (state is FetchItemFromSlugSuccess) {
+            log('success');
+            initVariables(state.item);
+          }
+        }, builder: (context, state) {
+          if (state is FetchItemFromSlugInitial && widget.slug != null) {
+            context
+                .read<FetchItemFromSlugCubit>()
+                .fetchItemFromSlug(slug: widget.slug!);
+            log('fetching item');
+            return Material(
+              child: Center(
+                child: UiUtils.progress(),
+              ),
+            );
+          } else if (state is FetchItemFromSlugLoading) {
+            log('loading');
+            return Material(
+              child: Center(
+                child: UiUtils.progress(),
+              ),
+            );
+          } else if (state is FetchItemFromSlugFailure) {
+            log('failure');
+            return SomethingWentWrong();
+          }
+          return BlocListener<MakeAnOfferItemCubit, MakeAnOfferItemState>(
+            listener: (context, state) {
+              if (state is MakeAnOfferItemInProgress) {
+                Widgets.showLoader(context);
+              }
+              if (state is MakeAnOfferItemSuccess ||
+                  state is MakeAnOfferItemFailure) {
+                Widgets.hideLoder(context);
+              }
+            },
+            child: Scaffold(
+              appBar: UiUtils.buildAppBar(
+                context,
+                backgroundColor: context.color.secondaryDetailsColor,
+                showBackButton: true,
+                actions: [
+                  if (isAddedByMe && model.status == "active" ||
+                      model.status == 'approved')
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          end: isAddedByMe &&
+                                  (model.status != "sold out" &&
+                                      model.status != "review" &&
+                                      model.status != "resubmitted" &&
+                                      model.status != "inactive" &&
+                                      model.status != "permanent rejected" &&
+                                      model.status != "soft rejected")
+                              ? 30.0
+                              : 15),
+                      child: IconButton(
+                        onPressed: () {
+                          HelperUtils.share(context, model.slug!);
+                        },
+                        icon: Icon(
+                          Icons.share,
+                          size: 24,
+                          color: context.color.textDefaultColor,
                         ),
                       ),
-                    if (isAddedByMe &&
-                        (model.status != "sold out" &&
-                            model.status != "review" &&
-                            model.status != "resubmitted" &&
-                            model.status != "inactive" &&
-                            model.status != "permanent rejected"))
-                      MultiBlocProvider(
-                        providers: [
-                          BlocProvider(
-                            create: (context) => DeleteItemCubit(),
-                          ),
-                          BlocProvider(
-                            create: (context) => ChangeMyItemStatusCubit(),
-                          ),
-                        ],
-                        child: Builder(builder: (context) {
-                          return BlocListener<DeleteItemCubit, DeleteItemState>(
-                            listener: (context, deleteState) {
-                              if (deleteState is DeleteItemSuccess) {
-                                HelperUtils.showSnackBarMessage(context,
-                                    "deleteItemSuccessMsg".translate(context));
-                                context
-                                    .read<FetchMyItemsCubit>()
-                                    .deleteItem(model);
-                                Navigator.pop(context, "refresh");
-                              } else if (deleteState is DeleteItemFailure) {
+                    ),
+                  if (isAddedByMe &&
+                      (model.status != "sold out" &&
+                          model.status != "review" &&
+                          model.status != "resubmitted" &&
+                          model.status != "inactive" &&
+                          model.status != "permanent rejected"))
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create: (context) => DeleteItemCubit(),
+                        ),
+                        BlocProvider(
+                          create: (context) => ChangeMyItemStatusCubit(),
+                        ),
+                      ],
+                      child: Builder(builder: (context) {
+                        return BlocListener<DeleteItemCubit, DeleteItemState>(
+                          listener: (context, deleteState) {
+                            if (deleteState is DeleteItemSuccess) {
+                              HelperUtils.showSnackBarMessage(context,
+                                  "deleteItemSuccessMsg".translate(context));
+                              context
+                                  .read<FetchMyItemsCubit>()
+                                  .deleteItem(model);
+                              Navigator.pop(context, "refresh");
+                            } else if (deleteState is DeleteItemFailure) {
+                              HelperUtils.showSnackBarMessage(
+                                  context, deleteState.errorMessage);
+                            }
+                          },
+                          child: BlocListener<ChangeMyItemStatusCubit,
+                              ChangeMyItemStatusState>(
+                            listener: (context, changeState) {
+                              if (changeState is ChangeMyItemStatusSuccess) {
                                 HelperUtils.showSnackBarMessage(
-                                    context, deleteState.errorMessage);
+                                    context, changeState.message);
+                                Navigator.pop(context, "refresh");
+                              } else if (changeState
+                                  is ChangeMyItemStatusFailure) {
+                                HelperUtils.showSnackBarMessage(
+                                    context, changeState.errorMessage);
                               }
                             },
-                            child: BlocListener<ChangeMyItemStatusCubit,
-                                ChangeMyItemStatusState>(
-                              listener: (context, changeState) {
-                                if (changeState is ChangeMyItemStatusSuccess) {
-                                  HelperUtils.showSnackBarMessage(
-                                      context, changeState.message);
-                                  Navigator.pop(context, "refresh");
-                                } else if (changeState
-                                    is ChangeMyItemStatusFailure) {
-                                  HelperUtils.showSnackBarMessage(
-                                      context, changeState.errorMessage);
-                                }
-                              },
-                              child: Padding(
-                                padding: EdgeInsetsDirectional.only(end: 30.0),
-                                child: Container(
-                                  height: 24,
-                                  width: 24,
-                                  alignment: AlignmentDirectional.center,
-                                  child: PopupMenuButton(
-                                    color: context.color.territoryColor,
-                                    offset: Offset(-12, 15),
-                                    shape: const RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.only(
-                                        bottomLeft: Radius.circular(17),
-                                        bottomRight: Radius.circular(17),
-                                        topLeft: Radius.circular(17),
-                                        topRight: Radius.circular(0),
-                                      ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.only(end: 30.0),
+                              child: Container(
+                                height: 24,
+                                width: 24,
+                                alignment: AlignmentDirectional.center,
+                                child: PopupMenuButton(
+                                  color: context.color.territoryColor,
+                                  offset: Offset(-12, 15),
+                                  shape: const RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(17),
+                                      bottomRight: Radius.circular(17),
+                                      topLeft: Radius.circular(17),
+                                      topRight: Radius.circular(0),
                                     ),
-                                    child: SvgPicture.asset(
-                                      AppIcons.more,
-                                      width: 20,
-                                      height: 20,
-                                      fit: BoxFit.contain,
-                                      colorFilter: ColorFilter.mode(
-                                          context.color.textDefaultColor,
-                                          BlendMode.srcIn),
-                                    ),
-                                    itemBuilder: (context) => [
-                                      if (model.status == "active" ||
-                                          model.status == "approved")
-                                        PopupMenuItem(
-                                            onTap: () {
-                                              Future.delayed(Duration.zero, () {
-                                                context
-                                                    .read<
-                                                        ChangeMyItemStatusCubit>()
-                                                    .changeMyItemStatus(
-                                                        id: model.id!,
-                                                        status: 'inactive');
-                                              });
-                                            },
-                                            child: CustomText(
-                                              "deactivate".translate(context),
-                                              color: context.color.buttonColor,
-                                            )),
-                                      if (model.status == "active" ||
-                                          model.status == "approved" ||
-                                          model.status == 'soft rejected')
-                                        PopupMenuItem(
-                                          child: CustomText(
-                                            "lblremove".translate(context),
-                                            color: context.color.buttonColor,
-                                          ),
-                                          onTap: () async {
-                                            var delete =
-                                                await UiUtils.showBlurredDialoge(
-                                              context,
-                                              dialoge: BlurredDialogBox(
-                                                title: "deleteBtnLbl"
-                                                    .translate(context),
-                                                content: CustomText(
-                                                  "deleteitemwarning"
-                                                      .translate(context),
-                                                ),
-                                              ),
-                                            );
-                                            if (delete == true) {
-                                              Future.delayed(
-                                                Duration.zero,
-                                                () {
-                                                  context
-                                                      .read<DeleteItemCubit>()
-                                                      .deleteItem(model.id!);
-                                                },
-                                              );
-                                            }
-                                          },
-                                        ),
-                                    ],
                                   ),
+                                  child: SvgPicture.asset(
+                                    AppIcons.more,
+                                    width: 20,
+                                    height: 20,
+                                    fit: BoxFit.contain,
+                                    colorFilter: ColorFilter.mode(
+                                        context.color.textDefaultColor,
+                                        BlendMode.srcIn),
+                                  ),
+                                  itemBuilder: (context) => [
+                                    if (model.status == "active" ||
+                                        model.status == "approved")
+                                      PopupMenuItem(
+                                          onTap: () {
+                                            Future.delayed(Duration.zero, () {
+                                              context
+                                                  .read<
+                                                      ChangeMyItemStatusCubit>()
+                                                  .changeMyItemStatus(
+                                                      id: model.id!,
+                                                      status: 'inactive');
+                                            });
+                                          },
+                                          child: CustomText(
+                                            "deactivate".translate(context),
+                                            color: context.color.buttonColor,
+                                          )),
+                                    if (model.status == "active" ||
+                                        model.status == "approved" ||
+                                        model.status == 'soft rejected')
+                                      PopupMenuItem(
+                                        child: CustomText(
+                                          "lblremove".translate(context),
+                                          color: context.color.buttonColor,
+                                        ),
+                                        onTap: () async {
+                                          var delete =
+                                              await UiUtils.showBlurredDialoge(
+                                            context,
+                                            dialoge: BlurredDialogBox(
+                                              title: "deleteBtnLbl"
+                                                  .translate(context),
+                                              content: CustomText(
+                                                "deleteitemwarning"
+                                                    .translate(context),
+                                              ),
+                                            ),
+                                          );
+                                          if (delete == true) {
+                                            Future.delayed(
+                                              Duration.zero,
+                                              () {
+                                                context
+                                                    .read<DeleteItemCubit>()
+                                                    .deleteItem(model.id!);
+                                              },
+                                            );
+                                          }
+                                        },
+                                      ),
+                                  ],
                                 ),
                               ),
                             ),
-                          );
-                        }),
-                      ),
-                  ],
-                ),
-                backgroundColor: context.color.secondaryDetailsColor,
-                bottomNavigationBar: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: bottomButtonWidget()),
-                body: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(13.0, 0.0, 13.0, 13.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        setImageViewer(),
-                        if (isAddedByMe) setLikesAndViewsCount(),
-                        Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            child: CustomText(
-                              model.name!,
-                              color: context.color.textDefaultColor,
-                              fontSize: context.font.large,
-                              maxLines: 2,
-                            )),
-                        setPriceAndStatus(),
-                        if (isAddedByMe) setRejectedReason(),
-                        if (model.address != null) setAddress(isDate: true),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        if (Constant.isGoogleBannerAdsEnabled == "1") ...[
-                          Container(
-                            alignment: AlignmentDirectional.center,
-                            child:
-                                AdBannerWidget(), // Custom widget for banner ad
                           ),
-                        ],
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        if (isAddedByMe)
-                          if (!model.isFeature!) createFeaturesAds(),
-                        if (model.customFields!.isNotEmpty) customFields(),
-                        //detailsContainer Widget
-                        //Dynamic Ads here
-                        Divider(
-                            thickness: 1,
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.1)),
-                        setDescription(),
-                        Divider(
-                            thickness: 1,
-                            color: context.color.textDefaultColor
-                                .withValues(alpha: 0.1)),
-                        if (!isAddedByMe && model.user != null)
-                          setSellerDetails(),
-                        //Dynamic Ads here
-                        setLocation(),
-                        if (Constant.isGoogleBannerAdsEnabled == "1") ...[
-                          Divider(
-                              thickness: 1,
-                              color: context.color.textDefaultColor
-                                  .withValues(alpha: 0.1)),
-                          Container(
-                            alignment: AlignmentDirectional.center,
-                            child:
-                                AdBannerWidget(), // Custom widget for banner ad
-                          ),
-                        ],
-
-                        if (!isAddedByMe) reportedAdsWidget(),
-                        if (!isAddedByMe) relatedAds(),
-                        // const SizedBox(height: 15),
-                      ],
+                        );
+                      }),
                     ),
+                ],
+              ),
+              backgroundColor: context.color.secondaryDetailsColor,
+              bottomNavigationBar: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                  child: bottomButtonWidget()),
+              body: SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(13.0, 0.0, 13.0, 13.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      setImageViewer(),
+                      if (isAddedByMe) setLikesAndViewsCount(),
+                      Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 10),
+                          child: CustomText(
+                            model.name!,
+                            color: context.color.textDefaultColor,
+                            fontSize: context.font.large,
+                            maxLines: 2,
+                          )),
+                      setPriceAndStatus(),
+                      if (isAddedByMe) setRejectedReason(),
+                      if (model.address != null) setAddress(isDate: true),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (Constant.isGoogleBannerAdsEnabled == "1") ...[
+                        Container(
+                          alignment: AlignmentDirectional.center,
+                          child:
+                              AdBannerWidget(), // Custom widget for banner ad
+                        ),
+                      ],
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      if (isAddedByMe)
+                        if (!model.isFeature!) createFeaturesAds(),
+                      if (model.customFields!.isNotEmpty) customFields(),
+                      //detailsContainer Widget
+                      //Dynamic Ads here
+                      Divider(
+                          thickness: 1,
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.1)),
+                      setDescription(),
+                      Divider(
+                          thickness: 1,
+                          color: context.color.textDefaultColor
+                              .withValues(alpha: 0.1)),
+                      if (!isAddedByMe && model.user != null)
+                        setSellerDetails(),
+                      //Dynamic Ads here
+                      setLocation(),
+                      if (Constant.isGoogleBannerAdsEnabled == "1") ...[
+                        Divider(
+                            thickness: 1,
+                            color: context.color.textDefaultColor
+                                .withValues(alpha: 0.1)),
+                        Container(
+                          alignment: AlignmentDirectional.center,
+                          child:
+                              AdBannerWidget(), // Custom widget for banner ad
+                        ),
+                      ],
+
+                      if (!isAddedByMe) reportedAdsWidget(),
+                      if (!isAddedByMe) relatedAds(),
+                      // const SizedBox(height: 15),
+                    ],
                   ),
                 ),
               ),
-            );
-          })),
-    );
+            ),
+          );
+        }));
   }
 
   Widget reportedAdsWidget() {
@@ -808,7 +802,8 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
             .where((field) => field.value != null && field.value!.isNotEmpty)
             .map((field) => DecoratedBox(
                   decoration: BoxDecoration(
-                    border: Border.all(color: Colors.red.withValues(alpha: 0.0)),
+                    border:
+                        Border.all(color: Colors.red.withValues(alpha: 0.0)),
                   ),
                   child: SizedBox(
                     width: MediaQuery.sizeOf(context).width * .45,
@@ -849,7 +844,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
       ),
     );
   }
-
 
   Widget valueContent(List<dynamic>? value) {
     if (((value![0].toString()).startsWith("http") ||
@@ -1505,7 +1499,7 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                   );
                 }
 
-                Navigator.push(context, BlurredRouter(
+                Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
                     return MultiBlocProvider(
                       providers: [
@@ -1574,7 +1568,7 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                     UiUtils.checkUser(
                         onNotGuest: () {
                           if (chatedUser != null) {
-                            Navigator.push(context, BlurredRouter(
+                            Navigator.push(context, MaterialPageRoute(
                               builder: (context) {
                                 return MultiBlocProvider(
                                   providers: [
@@ -1816,7 +1810,7 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                         child: UiUtils.getImage(
                           youtubeVideoThumbnail,
                           fit: BoxFit.cover,
-                          height:270,
+                          height: 270,
                           width: double.maxFinite,
                         ),
                       ),
@@ -1903,7 +1897,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
               ),
             ),
           ),
-
           if (model.isFeature != null)
             if (model.isFeature!)
               setTopRowItem(
@@ -2270,8 +2263,8 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
   void _navigateToGoogleMapScreen(BuildContext context) {
     Navigator.push(
       context,
-      BlurredRouter(
-        barrierDismiss: true,
+      MaterialPageRoute(
+        barrierDismissible: true,
         builder: (context) {
           return GoogleMapScreen(
             item: model,
@@ -2282,8 +2275,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
       ),
     );
   }
-
-
 
   Widget setLocation() {
     //final LatLng currentPosition = LatLng(model.latitude!, model.longitude!);
@@ -2302,30 +2293,30 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
           height: 5,
         ),
         ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.28,
-                  child: GoogleMap(
-                    initialCameraPosition: _initialPosition,
-                    zoomControlsEnabled: false,
-                    zoomGesturesEnabled: false,
-                    onTap: (latLng) {
-                      _navigateToGoogleMapScreen(context);
-                    },
-                    mapType: MapType.normal,
-                    markers: {
-                      Marker(
-                        markerId: MarkerId('currentPosition'),
-                        position: _initialPosition.target,
-                        onTap: () {
-                          // Navigate on marker tap
-                          _navigateToGoogleMapScreen(context);
-                        },
-                      )
-                    },
-                  ),
-                ),
-              ),
+          borderRadius: BorderRadius.circular(18),
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.28,
+            child: GoogleMap(
+              initialCameraPosition: _initialPosition,
+              zoomControlsEnabled: false,
+              zoomGesturesEnabled: false,
+              onTap: (latLng) {
+                _navigateToGoogleMapScreen(context);
+              },
+              mapType: MapType.normal,
+              markers: {
+                Marker(
+                  markerId: MarkerId('currentPosition'),
+                  position: _initialPosition.target,
+                  onTap: () {
+                    // Navigate on marker tap
+                    _navigateToGoogleMapScreen(context);
+                  },
+                )
+              },
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -2607,8 +2598,10 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
   void navigateToSellerProfile() {
     Navigator.pushNamed(context, Routes.sellerProfileScreen, arguments: {
       "model": model.user!,
-      "total": context.read<FetchSellerRatingsCubit>().totalSellerRatings() ?? 0,
-      "rating": context.read<FetchSellerRatingsCubit>().sellerData()?.averageRating,
+      "total":
+          context.read<FetchSellerRatingsCubit>().totalSellerRatings() ?? 0,
+      "rating":
+          context.read<FetchSellerRatingsCubit>().sellerData()?.averageRating,
     });
   }
 
@@ -2619,7 +2612,7 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
         children: [
           InkWell(
             onTap: () {
-             navigateToSellerProfile();
+              navigateToSellerProfile();
             },
             child: SizedBox(
               height: 60,
@@ -2629,10 +2622,10 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                 child: model.user!.profile != null && model.user!.profile != ""
                     ? UiUtils.getImage(model.user!.profile!, fit: BoxFit.fill)
                     : UiUtils.getSvg(
-                  AppIcons.defaultPersonLogo,
-                  color: context.color.territoryColor,
-                  fit: BoxFit.none,
-                ),
+                        AppIcons.defaultPersonLogo,
+                        color: context.color.territoryColor,
+                        fit: BoxFit.none,
+                      ),
               ),
             ),
           ),
@@ -2654,7 +2647,8 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          UiUtils.getSvg(AppIcons.verifiedIcon, width: 14, height: 14),
+                          UiUtils.getSvg(AppIcons.verifiedIcon,
+                              width: 14, height: 14),
                           SizedBox(width: 4),
                           CustomText(
                             "verifiedLbl".translate(context),
@@ -2674,8 +2668,13 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                       fontSize: context.font.large,
                     ),
                   ),
-                  if (context.watch<FetchSellerRatingsCubit>().sellerData() != null &&
-                      context.watch<FetchSellerRatingsCubit>().sellerData()!.averageRating != null)
+                  if (context.watch<FetchSellerRatingsCubit>().sellerData() !=
+                          null &&
+                      context
+                              .watch<FetchSellerRatingsCubit>()
+                              .sellerData()!
+                              .averageRating !=
+                          null)
                     Padding(
                       padding: const EdgeInsets.only(top: 3),
                       child: RichText(
@@ -2683,19 +2682,30 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                           children: [
                             WidgetSpan(
                               child: Icon(Icons.star_rounded,
-                                  size: 17, color: context.color.textDefaultColor),
+                                  size: 17,
+                                  color: context.color.textDefaultColor),
                             ),
                             TextSpan(
-                              text: '\t${context.watch<FetchSellerRatingsCubit>().sellerData()!.averageRating!.toStringAsFixed(2).toString()}',
-                              style: TextStyle(fontSize: 14, color: context.color.textDefaultColor),
+                              text:
+                                  '\t${context.watch<FetchSellerRatingsCubit>().sellerData()!.averageRating!.toStringAsFixed(2).toString()}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: context.color.textDefaultColor),
                             ),
                             TextSpan(
                               text: '  |  ',
-                              style: TextStyle(fontSize: 14, color: context.color.textDefaultColor.withOpacity(0.5)),
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: context.color.textDefaultColor
+                                      .withOpacity(0.5)),
                             ),
                             TextSpan(
-                              text: '${context.watch<FetchSellerRatingsCubit>().totalSellerRatings()}\t${"ratings".translate(context)}',
-                              style: TextStyle(fontSize: 14, color: context.color.textDefaultColor.withOpacity(0.3)),
+                              text:
+                                  '${context.watch<FetchSellerRatingsCubit>().totalSellerRatings()}\t${"ratings".translate(context)}',
+                              style: TextStyle(
+                                  fontSize: 14,
+                                  color: context.color.textDefaultColor
+                                      .withOpacity(0.3)),
                             ),
                           ],
                         ),
@@ -2705,8 +2715,7 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                       model.user!.email != null &&
                       model.user!.email!.isNotEmpty)
                     InkWell(
-                      onTap: ()
-                      {
+                      onTap: () {
                         navigateToSellerProfile();
                       },
                       child: CustomText(
@@ -2719,7 +2728,9 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
               ),
             ),
           ),
-          if (model.user!.showPersonalDetails == 1 && model.user!.mobile != null && model.user!.mobile!.isNotEmpty)
+          if (model.user!.showPersonalDetails == 1 &&
+              model.user!.mobile != null &&
+              model.user!.mobile!.isNotEmpty)
             setIconButtons(
               assetName: AppIcons.message,
               onTap: () {
@@ -2727,13 +2738,16 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                   isTelephone: false,
                   isSMS: true,
                   isMail: false,
-                  value: formatPhoneNumber(model.user!.mobile!, Constant.defaultCountryCode),
+                  value: formatPhoneNumber(
+                      model.user!.mobile!, Constant.defaultCountryCode),
                   context: context,
                 );
               },
             ),
           SizedBox(width: 10),
-          if (model.user!.showPersonalDetails == 1 && model.user!.mobile != null && model.user!.mobile!.isNotEmpty)
+          if (model.user!.showPersonalDetails == 1 &&
+              model.user!.mobile != null &&
+              model.user!.mobile!.isNotEmpty)
             setIconButtons(
               assetName: AppIcons.call,
               onTap: () {
@@ -2741,7 +2755,8 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
                   isTelephone: true,
                   isSMS: false,
                   isMail: false,
-                  value: formatPhoneNumber(model.user!.mobile!, Constant.defaultCountryCode),
+                  value: formatPhoneNumber(
+                      model.user!.mobile!, Constant.defaultCountryCode),
                   context: context,
                 );
               },
@@ -2750,8 +2765,6 @@ class AdDetailsScreenState extends CloudState<AdDetailsScreen> {
       ),
     );
   }
-
-
 
   Widget setIconButtons({
     required String assetName,

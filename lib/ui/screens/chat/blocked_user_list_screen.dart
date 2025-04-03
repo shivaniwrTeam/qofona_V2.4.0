@@ -21,7 +21,7 @@ class BlockedUserListScreen extends StatefulWidget {
   const BlockedUserListScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const BlockedUserListScreen();
       },

@@ -48,7 +48,7 @@ class CitiesScreen extends StatefulWidget {
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
 
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) => MultiBlocProvider(
         providers: [
           BlocProvider(
@@ -207,7 +207,6 @@ class CitiesScreenState extends CloudState<CitiesScreen> {
                   ))),
         ),
       ),
-
       elevation: context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
           ? 0
           : 6,
@@ -223,7 +222,6 @@ class CitiesScreenState extends CloudState<CitiesScreen> {
     return ListView.separated(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-
       itemCount: 15,
       separatorBuilder: (context, index) {
         return Container();
@@ -520,8 +518,6 @@ class CitiesScreenState extends CloudState<CitiesScreen> {
                               },
                               child: ListTile(
                                 onTap: () {
-
-
                                   context
                                       .read<FetchAreasCubit>()
                                       .fetchAreas(cityId: city.id!);

@@ -25,9 +25,9 @@ class AddMoreDetailsScreen extends StatefulWidget {
   const AddMoreDetailsScreen(
       {super.key, this.isEdit, this.mainImage, this.otherImage});
 
-  static BlurredRouter route(RouteSettings settings) {
+  static Route route(RouteSettings settings) {
     Map? args = settings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return BlocProvider.value(
           value:

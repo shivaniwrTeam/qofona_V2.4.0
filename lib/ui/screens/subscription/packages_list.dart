@@ -30,7 +30,7 @@ class SubscriptionPackageListScreen extends StatefulWidget {
   const SubscriptionPackageListScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(builder: (context) {
+    return MaterialPageRoute(builder: (context) {
       return MultiBlocProvider(
         providers: [
           BlocProvider(

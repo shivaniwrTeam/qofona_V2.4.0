@@ -20,7 +20,7 @@ class PdfViewer extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => PdfViewer(
         url: arguments?['url'],
         // from: arguments?['from'],

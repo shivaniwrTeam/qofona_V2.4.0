@@ -20,7 +20,7 @@ class ProfileSettings extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map? arguments = routeSettings.arguments as Map?;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => ProfileSettings(
         title: arguments?['title'] as String,
         param: arguments?['param'] as String,

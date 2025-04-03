@@ -15,7 +15,7 @@ class ItemsScreen extends StatefulWidget {
   State<ItemsScreen> createState() => MyItemState();
 
   static Route route(RouteSettings routeSettings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => const ItemsScreen(),
     );
   }

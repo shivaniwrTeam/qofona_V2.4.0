@@ -43,7 +43,7 @@ class UserProfileScreen extends StatefulWidget {
 
   static Route route(RouteSettings routeSettings) {
     Map arguments = routeSettings.arguments as Map;
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (_) => UserProfileScreen(
         from: arguments['from'] as String,
         popToCurrent: arguments['popToCurrent'] as bool?,

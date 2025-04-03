@@ -20,7 +20,7 @@ class FavoriteScreen extends StatefulWidget {
   const FavoriteScreen({super.key});
 
   static Route route(RouteSettings settings) {
-    return BlurredRouter(
+    return MaterialPageRoute(
       builder: (context) {
         return const FavoriteScreen();
       },
@@ -54,7 +54,6 @@ class FavoriteScreenState extends State<FavoriteScreen> {
   void getFavorite() async {
     context.read<FavoriteCubit>().getFavorite();
   }
-
 
   @override
   void dispose() {

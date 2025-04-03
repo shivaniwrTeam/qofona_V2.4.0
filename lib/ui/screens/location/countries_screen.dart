@@ -40,13 +40,12 @@ class CountriesScreen extends StatefulWidget {
   static Route route(RouteSettings settings) {
     Map? arguments = settings.arguments as Map?;
 
-    return BlurredRouter(
-      builder: (context) =>
-          BlocProvider(
-              create: (context) => FetchCountriesCubit(),
-              child: CountriesScreen(
-                from: arguments!['from'] ?? "",
-              )),
+    return MaterialPageRoute(
+      builder: (context) => BlocProvider(
+          create: (context) => FetchCountriesCubit(),
+          child: CountriesScreen(
+            from: arguments!['from'] ?? "",
+          )),
     );
   }
 
@@ -134,8 +133,8 @@ class CountriesScreenState extends State<CountriesScreen>
     // if (searchController.text.isNotEmpty) {
     if (previousSearchQuery != searchController.text) {
       context.read<FetchCountriesCubit>().fetchCountries(
-        search: searchController.text,
-      );
+            search: searchController.text,
+          );
       previousSearchQuery = searchController.text;
       setState(() {});
     }
@@ -144,7 +143,7 @@ class CountriesScreenState extends State<CountriesScreen>
   PreferredSizeWidget appBarWidget(List<CountriesModel> countriesModel) {
     return AppBar(
       systemOverlayStyle:
-      SystemUiOverlayStyle(statusBarColor: context.color.backgroundColor),
+          SystemUiOverlayStyle(statusBarColor: context.color.backgroundColor),
       bottom: PreferredSize(
           preferredSize: Size.fromHeight(58),
           child: Row(
@@ -159,17 +158,14 @@ class CountriesScreenState extends State<CountriesScreen>
                     decoration: BoxDecoration(
                         border: Border.all(
                             width:
-                            context
-                                .watch<AppThemeCubit>()
-                                .state
-                                .appTheme ==
-                                AppTheme.dark
-                                ? 0
-                                : 1,
+                                context.watch<AppThemeCubit>().state.appTheme ==
+                                        AppTheme.dark
+                                    ? 0
+                                    : 1,
                             color: context.color.textLightColor
                                 .withValues(alpha: 0.18)),
                         borderRadius:
-                        const BorderRadius.all(Radius.circular(10)),
+                            const BorderRadius.all(Radius.circular(10)),
                         color: context.color.secondaryColor),
                     child: TextFormField(
                         controller: searchController,
@@ -177,21 +173,17 @@ class CountriesScreenState extends State<CountriesScreen>
                           border: InputBorder.none,
                           //OutlineInputBorder()
                           fillColor:
-                          Theme
-                              .of(context)
-                              .colorScheme
-                              .secondaryColor,
+                              Theme.of(context).colorScheme.secondaryColor,
                           hintText:
-                          "${"search".translate(context)}\t${"country"
-                              .translate(context)}",
+                              "${"search".translate(context)}\t${"country".translate(context)}",
                           prefixIcon: setSearchIcon(),
                           prefixIconConstraints:
-                          const BoxConstraints(minHeight: 5, minWidth: 5),
+                              const BoxConstraints(minHeight: 5, minWidth: 5),
                         ),
                         enableSuggestions: true,
                         onEditingComplete: () {
                           setState(
-                                () {
+                            () {
                               isFocused = false;
                             },
                           );
@@ -256,29 +248,22 @@ class CountriesScreenState extends State<CountriesScreen>
                   textDirection: Directionality.of(context),
                   child: RotatedBox(
                     quarterTurns:
-                    Directionality.of(context) == TextDirection.rtl
-                        ? 2
-                        : -4,
+                        Directionality.of(context) == TextDirection.rtl
+                            ? 2
+                            : -4,
                     child: UiUtils.getSvg(AppIcons.arrowLeft,
                         fit: BoxFit.none,
                         color: context.color.textDefaultColor),
                   ),
                 ))),
       ),
-
-      elevation: context
-          .watch<AppThemeCubit>()
-          .state
-          .appTheme == AppTheme.dark
+      elevation: context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
           ? 0
           : 6,
       shadowColor:
-      context
-          .watch<AppThemeCubit>()
-          .state
-          .appTheme == AppTheme.dark
-          ? null
-          : context.color.textDefaultColor.withValues(alpha: 0.2),
+          context.watch<AppThemeCubit>().state.appTheme == AppTheme.dark
+              ? null
+              : context.color.textDefaultColor.withValues(alpha: 0.2),
       backgroundColor: context.color.backgroundColor,
     );
   }
@@ -293,14 +278,8 @@ class CountriesScreenState extends State<CountriesScreen>
       },
       itemBuilder: (context, index) {
         return Shimmer.fromColors(
-          baseColor: Theme
-              .of(context)
-              .colorScheme
-              .shimmerBaseColor,
-          highlightColor: Theme
-              .of(context)
-              .colorScheme
-              .shimmerHighlightColor,
+          baseColor: Theme.of(context).colorScheme.shimmerBaseColor,
+          highlightColor: Theme.of(context).colorScheme.shimmerHighlightColor,
           child: Container(
             padding: EdgeInsets.all(5),
             width: double.maxFinite,
@@ -309,7 +288,7 @@ class CountriesScreenState extends State<CountriesScreen>
                 borderRadius: BorderRadius.circular(5),
                 border: Border.all(
                     color:
-                    context.color.textLightColor.withValues(alpha: 0.18))),
+                        context.color.textLightColor.withValues(alpha: 0.18))),
           ),
         );
       },
@@ -320,16 +299,16 @@ class CountriesScreenState extends State<CountriesScreen>
   Widget build(BuildContext context) {
     return BlocBuilder<FetchCountriesCubit, FetchCountriesState>(
         builder: (context, state) {
-          List<CountriesModel> countriesModel = [];
-          if (state is FetchCountriesSuccess) {
-            countriesModel = state.countriesModel;
-          }
-          return Scaffold(
-            appBar: appBarWidget(countriesModel),
-            body: bodyData(),
-            backgroundColor: context.color.backgroundColor,
-          );
-        });
+      List<CountriesModel> countriesModel = [];
+      if (state is FetchCountriesSuccess) {
+        countriesModel = state.countriesModel;
+      }
+      return Scaffold(
+        appBar: appBarWidget(countriesModel),
+        body: bodyData(),
+        backgroundColor: context.color.backgroundColor,
+      );
+    });
   }
 
   Widget bodyData() {
@@ -349,9 +328,9 @@ class CountriesScreenState extends State<CountriesScreen>
         permission != LocationPermission.deniedForever;
     log('$permission - $isPermissionGiven - $isLocationEnabled');
     _locationStatus.value =
-    _currentLocation.isNotEmpty && isLocationEnabled && isPermissionGiven
-        ? 'locationFetched'
-        : _getLocationStatus(isLocationEnabled, isPermissionGiven);
+        _currentLocation.isNotEmpty && isLocationEnabled && isPermissionGiven
+            ? 'locationFetched'
+            : _getLocationStatus(isLocationEnabled, isPermissionGiven);
   }
 
   Future<void> _getCurrentLocation() async {
@@ -596,29 +575,10 @@ class CountriesScreenState extends State<CountriesScreen>
                     children: [
                       widget.from == "addItem"
                           ? Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 18, vertical: 18),
-                        child: CustomText(
-                          "${"chooseLbl".translate(context)}\t${"country"
-                              .translate(context)}",
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          color: context.color.textDefaultColor,
-                          fontSize: context.font.normal,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      )
-                          : InkWell(
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 12),
-                          child: Row(
-                            children: [
-                              CustomText(
-                                "${"lblall".translate(
-                                    context)}\t${"countriesLbl".translate(
-                                    context)}",
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 18, vertical: 18),
+                              child: CustomText(
+                                "${"chooseLbl".translate(context)}\t${"country".translate(context)}",
                                 textAlign: TextAlign.center,
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
@@ -626,59 +586,75 @@ class CountriesScreenState extends State<CountriesScreen>
                                 fontSize: context.font.normal,
                                 fontWeight: FontWeight.w600,
                               ),
-                              Spacer(),
-                              Container(
-                                  width: 32,
-                                  height: 32,
-                                  decoration: BoxDecoration(
-                                      borderRadius:
-                                      BorderRadius.circular(8),
-                                      color: context.color.textLightColor
-                                          .withValues(alpha: 0.1)),
-                                  child: Icon(
-                                    Icons.chevron_right_outlined,
-                                    color: context.color.textDefaultColor,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          if (widget.from == "home") {
-                            HiveUtils.setLocation();
+                            )
+                          : InkWell(
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 15, vertical: 12),
+                                child: Row(
+                                  children: [
+                                    CustomText(
+                                      "${"lblall".translate(context)}\t${"countriesLbl".translate(context)}",
+                                      textAlign: TextAlign.center,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      color: context.color.textDefaultColor,
+                                      fontSize: context.font.normal,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    Spacer(),
+                                    Container(
+                                        width: 32,
+                                        height: 32,
+                                        decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(8),
+                                            color: context.color.textLightColor
+                                                .withValues(alpha: 0.1)),
+                                        child: Icon(
+                                          Icons.chevron_right_outlined,
+                                          color: context.color.textDefaultColor,
+                                        )),
+                                  ],
+                                ),
+                              ),
+                              onTap: () {
+                                if (widget.from == "home") {
+                                  HiveUtils.setLocation();
 
-                            Future.delayed(
-                              Duration.zero,
-                                  () {
-                                context
-                                    .read<FetchHomeScreenCubit>()
-                                    .fetch(radius: null);
-                                context
-                                    .read<FetchHomeAllItemsCubit>()
-                                    .fetch(radius: null);
+                                  Future.delayed(
+                                    Duration.zero,
+                                    () {
+                                      context
+                                          .read<FetchHomeScreenCubit>()
+                                          .fetch(radius: null);
+                                      context
+                                          .read<FetchHomeAllItemsCubit>()
+                                          .fetch(radius: null);
+                                    },
+                                  );
+
+                                  Navigator.popUntil(
+                                      context, (route) => route.isFirst);
+                                } else if (widget.from == "location") {
+                                  HiveUtils.setLocation();
+                                  HelperUtils.killPreviousPages(
+                                      context, Routes.main, {"from": "login"});
+                                } else {
+                                  Map<String, dynamic> result = {
+                                    'area_id': null,
+                                    'area': null,
+                                    'state': null,
+                                    'city': null,
+                                    'country': null,
+                                    'latitude': null,
+                                    'longitude': null
+                                  };
+
+                                  Navigator.pop(context, result);
+                                }
                               },
-                            );
-
-                            Navigator.popUntil(
-                                context, (route) => route.isFirst);
-                          } else if (widget.from == "location") {
-                            HiveUtils.setLocation();
-                            HelperUtils.killPreviousPages(
-                                context, Routes.main, {"from": "login"});
-                          } else {
-                            Map<String, dynamic> result = {
-                              'area_id': null,
-                              'area': null,
-                              'state': null,
-                              'city': null,
-                              'country': null,
-                              'latitude': null,
-                              'longitude': null
-                            };
-
-                            Navigator.pop(context, result);
-                          }
-                        },
-                      ),
+                            ),
                       const Divider(
                         thickness: 1.2,
                         height: 10,
@@ -698,18 +674,19 @@ class CountriesScreenState extends State<CountriesScreen>
                           },
                           itemBuilder: (context, index) {
                             CountriesModel country =
-                            state.countriesModel[index];
+                                state.countriesModel[index];
 
                             return ListTile(
                               onTap: () {
                                 Navigator.pushNamed(
-                                    context, Routes.statesScreen, arguments: {
-                                  "countryId": country.id!,
-                                  "countryName": country.name!,
-                                  "latitude": country.latitude,
-                                  "longitude": country.longitude,
-                                  "from": widget.from
-                                });
+                                    context, Routes.statesScreen,
+                                    arguments: {
+                                      "countryId": country.id!,
+                                      "countryName": country.name!,
+                                      "latitude": country.latitude,
+                                      "longitude": country.longitude,
+                                      "from": widget.from
+                                    });
                               },
                               title: CustomText(
                                 country.name!,
@@ -770,10 +747,7 @@ class CountriesScreenState extends State<CountriesScreen>
       },
       child: Icon(
         Icons.close_rounded,
-        color: Theme
-            .of(context)
-            .colorScheme
-            .blackColor,
+        color: Theme.of(context).colorScheme.blackColor,
         size: 30,
       ),
     );
